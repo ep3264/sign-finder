@@ -1,4 +1,4 @@
-// SignFinder.cpp: определяет точку входа для консольного приложения.
+п»ї// SignFinder.cpp: РѕРїСЂРµРґРµР»СЏРµС‚ С‚РѕС‡РєСѓ РІС…РѕРґР° РґР»СЏ РєРѕРЅСЃРѕР»СЊРЅРѕРіРѕ РїСЂРёР»РѕР¶РµРЅРёСЏ.
 //
 #define STATUS_INFO_LENGTH_MISMATCH 0xc0000004
 #include "stdafx.h"
@@ -6,8 +6,8 @@
 #include <stdio.h>
 #include <Windows.h>
 #include <iostream>
-#include <psapi.h>//информация о памяти процесса
-#include <fstream>//для вывода в документ адресов и значений по ним
+#include <psapi.h>//РёРЅС„РѕСЂРјР°С†РёСЏ Рѕ РїР°РјСЏС‚Рё РїСЂРѕС†РµСЃСЃР°
+#include <fstream>//РґР»СЏ РІС‹РІРѕРґР° РІ РґРѕРєСѓРјРµРЅС‚ Р°РґСЂРµСЃРѕРІ Рё Р·РЅР°С‡РµРЅРёР№ РїРѕ РЅРёРј
 using namespace std;
 #pragma comment(lib, "psapi.lib")
 typedef struct _tagThreadInfo
@@ -154,26 +154,26 @@ DWORD64 ScanSign(DWORD64 baseAdress, PBYTE sign, DWORD64 scanSize, PBYTE mask)
 	}
 	return 0;
 }
-//получить базовый адрес процесса
+//РїРѕР»СѓС‡РёС‚СЊ Р±Р°Р·РѕРІС‹Р№ Р°РґСЂРµСЃ РїСЂРѕС†РµСЃСЃР°
 LPVOID GetBaseAddress(HANDLE hProc)
 {
-	//структура с информацией о процессе
+	//СЃС‚СЂСѓРєС‚СѓСЂР° СЃ РёРЅС„РѕСЂРјР°С†РёРµР№ Рѕ РїСЂРѕС†РµСЃСЃРµ
 	MODULEINFO miInfo;
 
-	//получаем базовый адрес процесса
+	//РїРѕР»СѓС‡Р°РµРј Р±Р°Р·РѕРІС‹Р№ Р°РґСЂРµСЃ РїСЂРѕС†РµСЃСЃР°
 	if (GetModuleInformation(hProc, NULL, &miInfo, sizeof(miInfo)))
 		return miInfo.EntryPoint;
 	else
 		return NULL;
 }
 
-//получить размер используемой памяти приложения(в байтах)
+//РїРѕР»СѓС‡РёС‚СЊ СЂР°Р·РјРµСЂ РёСЃРїРѕР»СЊР·СѓРµРјРѕР№ РїР°РјСЏС‚Рё РїСЂРёР»РѕР¶РµРЅРёСЏ(РІ Р±Р°Р№С‚Р°С…)
 DWORD GetMemorySize(HANDLE hProc)
 {
-	//структура с информацией о процессе
+	//СЃС‚СЂСѓРєС‚СѓСЂР° СЃ РёРЅС„РѕСЂРјР°С†РёРµР№ Рѕ РїСЂРѕС†РµСЃСЃРµ
 	PROCESS_MEMORY_COUNTERS pmcInfo;
 
-	//получаем информацию о процессе
+	//РїРѕР»СѓС‡Р°РµРј РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ РїСЂРѕС†РµСЃСЃРµ
 	if (GetProcessMemoryInfo(hProc, &pmcInfo, sizeof(pmcInfo)))
 		return (DWORD)pmcInfo.WorkingSetSize;
 	else
@@ -182,7 +182,7 @@ DWORD GetMemorySize(HANDLE hProc)
 
 void main()
 {
-	setlocale(LC_ALL, "Russian");//устанавливаем русский язык для вывода
+	setlocale(LC_ALL, "Russian");//СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј СЂСѓСЃСЃРєРёР№ СЏР·С‹Рє РґР»СЏ РІС‹РІРѕРґР°
 	byte sign[] = { 0x68, 0x00, 0x00, 0x00, 0x00, 0x68, 0x00, 0x00, 0x00, 0x00, 0xA4, 0xFF,
 		0x15, 0x00, 0x00, 0x00, 0x00, 0x50, 0xFF, 0x15, 0x00, 0x00, 0x00, 0x00, 0x68, 0x00, 0x00, 0x00, 0x00 };
 	byte mask[] = "x????x????xxx????xxx????x????";
@@ -250,12 +250,12 @@ void main()
 						);
 					m_PID = pProcessInfo->dwProcessID;
 					SYSTEM_INFO msi;
-					GetSystemInfo(&msi); //тут я получаю состояние системы.
+					GetSystemInfo(&msi); //С‚СѓС‚ СЏ РїРѕР»СѓС‡Р°СЋ СЃРѕСЃС‚РѕСЏРЅРёРµ СЃРёСЃС‚РµРјС‹.
 
-					//получаем минимальный адрес поиска
+					//РїРѕР»СѓС‡Р°РµРј РјРёРЅРёРјР°Р»СЊРЅС‹Р№ Р°РґСЂРµСЃ РїРѕРёСЃРєР°
 					DWORD64 dwStart = (DWORD64)msi.lpMinimumApplicationAddress;
 
-					//получаем максимальный адрес поиска
+					//РїРѕР»СѓС‡Р°РµРј РјР°РєСЃРёРјР°Р»СЊРЅС‹Р№ Р°РґСЂРµСЃ РїРѕРёСЃРєР°
 					DWORD64 dwMemSize = (DWORD64)msi.lpMaximumApplicationAddress;
 
 				
@@ -281,12 +281,12 @@ void main()
 		
 		GetWindowThreadProcessId(bot, &m_PID);
 		SYSTEM_INFO msi;
-		GetSystemInfo(&msi); //тут я получаю состояние системы.
+		GetSystemInfo(&msi); //С‚СѓС‚ СЏ РїРѕР»СѓС‡Р°СЋ СЃРѕСЃС‚РѕСЏРЅРёРµ СЃРёСЃС‚РµРјС‹.
 
-		//получаем минимальный адрес поиска
+		//РїРѕР»СѓС‡Р°РµРј РјРёРЅРёРјР°Р»СЊРЅС‹Р№ Р°РґСЂРµСЃ РїРѕРёСЃРєР°
 		DWORD64 dwStart = (DWORD64)msi.lpMinimumApplicationAddress;
 
-		//получаем максимальный адрес поиска
+		//РїРѕР»СѓС‡Р°РµРј РјР°РєСЃРёРјР°Р»СЊРЅС‹Р№ Р°РґСЂРµСЃ РїРѕРёСЃРєР°
 		DWORD64 dwMemSize =(DWORD64)msi.lpMaximumApplicationAddress;
 
 		
